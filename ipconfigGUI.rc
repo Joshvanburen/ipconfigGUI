@@ -1,0 +1,32 @@
+
+id ICON "ipconfigGUI.ico"
+// Application manifest.
+1 24 "ipconfigGUI.manifest"
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "JEV Development"
+      VALUE "FileDescription", "Ipconfig GUI"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "Ipconfig GUI"
+      VALUE "LegalCopyright", "Ipconfig GUI"
+      VALUE "OriginalFilename", "ipconfigGUI.exe"
+      VALUE "ProductName", "Ipconfig GUI"
+      VALUE "ProductVersion", "1.0"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END
+
+
+
+#include "wx/msw/wx.rc"
