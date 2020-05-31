@@ -69,18 +69,6 @@ class ipconfigGUIFrame : public wxFrame
 		void about(wxCommandEvent& event);
 		vector<localAdapterInfo> adaptersInfo;
 		vector<wstring> interfaceNames;
-		PIP_INTERFACE_INFO interfaceInfo;
-		wxComboBox * adapterDescCombo;
-		wxTextCtrl * compNameInfoText;
-		wxTextCtrl * ipV4InfoText;
-		wxTextCtrl * ipV6InfoText;
-		wxTextCtrl * macInfoText;
-		wxButton * okButton;
-		wxButton * releaseButton;
-		wxButton * releaseAllButton;
-		wxButton * renewButton;
-		wxButton * renewAllButton;
-		wxButton * refreshButton;
 		bool childExists;
 		wxWindow * childRef;
 		
@@ -91,7 +79,11 @@ class ipconfigGUIFrame : public wxFrame
 	enum
 	{
 		//Event values
-		idRefresh = 1000,
+		idCName = 1000,
+		idIPV4,
+		idIPV6,
+		idMAC,
+		idRefresh,
 		idRelease,
 		idReleaseAll,
 		idRenew,

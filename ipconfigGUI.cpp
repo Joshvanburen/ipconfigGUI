@@ -80,7 +80,7 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	SetMenuBar(menubar);
 	
 	//Initialize the combo box, clear it
-	adapterDescCombo = new wxComboBox(fPanel, idCombo);
+	wxComboBox * adapterDescCombo = new wxComboBox(fPanel, idCombo);
 	adapterDescCombo->Clear();
 	
 	//Add the items to the combo box
@@ -94,12 +94,12 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	adapterDescCombo->SetSelection(0);
 	
 	//Create the buttons
-	okButton = new wxButton(fPanel, wxID_OK, L"&OK");
-	releaseButton = new wxButton(fPanel, idRelease, L"Relea&se");
-	releaseAllButton = new wxButton(fPanel, idReleaseAll, L"Rele&ase All");
-	renewButton = new wxButton(fPanel, idRenew, L"Re&new");
-	renewAllButton = new wxButton(fPanel, idRenewAll, L"Rene&w All");
-	refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
+	wxButton * okButton = new wxButton(fPanel, wxID_OK, L"&OK");
+	wxButton * releaseButton = new wxButton(fPanel, idRelease, L"Relea&se");
+	wxButton * releaseAllButton = new wxButton(fPanel, idReleaseAll, L"Rele&ase All");
+	wxButton * renewButton = new wxButton(fPanel, idRenew, L"Re&new");
+	wxButton * renewAllButton = new wxButton(fPanel, idRenewAll, L"Rene&w All");
+	wxButton * refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
 	
 	//Create labels for the information
 	wxStaticText * compNameLabel = new wxStaticText(fPanel, wxID_ANY, L"Computer Name:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
@@ -109,10 +109,10 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	wxStaticText * macLabel = new wxStaticText(fPanel, wxID_ANY, L"MAC Address:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	
 	//Create the text controls to hold the information
-	compNameInfoText = new wxTextCtrl(fPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
-	ipV4InfoText = new wxTextCtrl(fPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
-	ipV6InfoText = new wxTextCtrl(fPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
-	macInfoText = new wxTextCtrl(fPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
+	wxTextCtrl * compNameInfoText = new wxTextCtrl(fPanel, idCName, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
+	wxTextCtrl * ipV4InfoText = new wxTextCtrl(fPanel, idIPV4, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
+	wxTextCtrl * ipV6InfoText = new wxTextCtrl(fPanel, idIPV6, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
+	wxTextCtrl * macInfoText = new wxTextCtrl(fPanel, idMAC, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY, wxDefaultValidator, wxTextCtrlNameStr);
 	
 	//Set the tool tips for all of the controls
 	okButton->SetToolTip(L"Close (Alt+O)");
@@ -214,6 +214,9 @@ void ipconfigGUIFrame::setComputerNameText()
 	//Get the computer name
 	wxString compName(getComputerName());
 	
+	//Find the text control
+	wxTextCtrl * compNameInfoText = (wxTextCtrl *)FindWindow(idCName);
+	
 	//Clear the control
 	compNameInfoText->Clear();
 	
@@ -227,6 +230,9 @@ void ipconfigGUIFrame::getAdapterInfo()
 {
 	//Erase the buffer
 	adaptersInfo.clear();
+	
+	//Interface info 
+	PIP_INTERFACE_INFO interfaceInfo;
 	
 	//Free the memory
 	if(interfaceInfo) { HeapFree(GetProcessHeap(), 0, (interfaceInfo)); }
@@ -432,6 +438,9 @@ void ipconfigGUIFrame::refreshData()
 	//Get all new data
 	getAdapterInfo();
 	
+	//Find the combo box
+	wxComboBox * adapterDescCombo = (wxComboBox *)FindWindow(idCombo);
+	
 	//Get the currently selected string
 	wxString currAdapter = adapterDescCombo->GetStringSelection();
 	
@@ -479,6 +488,11 @@ void ipconfigGUIFrame::refreshData()
 		//Compare the strings
 		if(currAdapter.CmpNoCase(compareString) == 0)
 		{
+			//Find the text controls 
+			wxTextCtrl * ipV4InfoText = (wxTextCtrl *)FindWindow(idIPV4);
+			wxTextCtrl * ipV6InfoText = (wxTextCtrl *)FindWindow(idIPV6);
+			wxTextCtrl * macInfoText = (wxTextCtrl *)FindWindow(idMAC);
+			
 			//Clear the text controls
 			ipV4InfoText->Clear();
 			ipV6InfoText->Clear();
@@ -497,6 +511,10 @@ void ipconfigGUIFrame::refreshData()
 			
 			//Gets the edit menu
 			wxMenu * editMenu = fMenu->GetMenu(eMenuIndex);
+			
+			//Find the buttons needed 
+			wxButton * releaseButton = (wxButton *)FindWindow(idRelease);
+			wxButton * renewButton = (wxButton *)FindWindow(idRenew);
 			
 			//If the adapter is not releaseable, disable the button and menu selections
 			if(adaptersInfo.at(i).releaseable == false)
@@ -703,6 +721,12 @@ void ipconfigGUIFrame::OnExit(wxCommandEvent & WXUNUSED(event))
 ///Releases the IP for the selected adapter
 void ipconfigGUIFrame::releaseIP(wxCommandEvent& event)
 {
+	//Find the button
+	wxButton * releaseButton = (wxButton *)FindWindow(idRelease);
+	
+	//Find the combo box
+	wxComboBox * adapterDescCombo = (wxComboBox *)FindWindow(idCombo);
+	
 	//Disable the release button
 	releaseButton->Enable(false);
 	
@@ -742,7 +766,7 @@ void ipconfigGUIFrame::releaseIP(wxCommandEvent& event)
 	} //Ends the for
 	
 	//Pointer to the structure to get the information from the getinterfaceinfo function
-	interfaceInfo = NULL;
+	PIP_INTERFACE_INFO interfaceInfo = NULL;
 	
 	//Buffer length
 	unsigned long iInfoSize = 0;
@@ -788,6 +812,12 @@ void ipconfigGUIFrame::releaseIP(wxCommandEvent& event)
 ///Renews the IP for the selected adapter
 void ipconfigGUIFrame::renewIP(wxCommandEvent& event)
 {
+	//Find the button
+	wxButton * renewButton = (wxButton *)FindWindow(idRenew);
+	
+	//Find the combo box
+	wxComboBox * adapterDescCombo = (wxComboBox *)FindWindow(idCombo);
+	
 	//Disable the renew button
 	renewButton->Enable(false);
 	
@@ -827,7 +857,7 @@ void ipconfigGUIFrame::renewIP(wxCommandEvent& event)
 	} //Ends the for
 	
 	//Pointer to the structure to get the information from the getinterfaceinfo function
-	interfaceInfo = NULL;
+	PIP_INTERFACE_INFO interfaceInfo = NULL;
 	
 	//Buffer length
 	unsigned long iInfoSize = 0;
@@ -872,7 +902,10 @@ void ipconfigGUIFrame::renewIP(wxCommandEvent& event)
 
 ///Releases the IP for all adapters
 void ipconfigGUIFrame::releaseAllIP(wxCommandEvent& event)
-{
+{	
+	//Find the button
+	wxButton * releaseAllButton = (wxButton *)FindWindow(idReleaseAll);
+	
 	//Disable the release all button
 	releaseAllButton->Enable(false);
 	
@@ -889,7 +922,7 @@ void ipconfigGUIFrame::releaseAllIP(wxCommandEvent& event)
 	editMenu->Enable(idReleaseAll, false);
 	
 	//Pointer to the structure to get the information from the getinterfaceinfo function
-	interfaceInfo = NULL;
+	PIP_INTERFACE_INFO interfaceInfo = NULL;
 	
 	//Buffer length
 	unsigned long iInfoSize = 0;
@@ -966,6 +999,9 @@ void ipconfigGUIFrame::releaseAllIP(wxCommandEvent& event)
 ///Renews the IP for all adapters
 void ipconfigGUIFrame::renewAllIP(wxCommandEvent& event)
 {
+	//Find the button
+	wxButton * renewAllButton = (wxButton *)FindWindow(idRenewAll);
+	
 	//Disable the renew all button
 	renewAllButton->Enable(false);
 	
@@ -982,7 +1018,7 @@ void ipconfigGUIFrame::renewAllIP(wxCommandEvent& event)
 	editMenu->Enable(idRenewAll, false);
 	
 	//Pointer to the structure to get the information from the getinterfaceinfo function
-	interfaceInfo = NULL;
+	PIP_INTERFACE_INFO interfaceInfo = NULL;
 	
 	//Buffer length
 	unsigned long iInfoSize = 0;
