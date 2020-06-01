@@ -425,8 +425,12 @@ void ipconfigGUIFrame::getAdapterInfo()
 			//Loop through the adapter addresses and see if we find a match
 			for(int j = 0; j < adaptersInfo.size(); j++)
 			{
-				//The adapter is releaseable
-				adaptersInfo.at(j).releaseable = true;
+				//If the adapter is found, it's releaseable
+				if(interfaceName.find(adaptersInfo.at(j).adaptName) != wstring::npos)
+				{
+					//The adapter is releaseable
+					adaptersInfo.at(j).releaseable = true;
+				} //Ends the if
 			} //Ends the for loop
 		} //Ends the for loop
 	} //Ends the if
