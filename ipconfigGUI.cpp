@@ -802,9 +802,34 @@ void ipconfigGUIFrame::releaseIP(wxCommandEvent& event)
 				//If error
 				if(retVal != NO_ERROR)
 				{
-					//Show the error
-					wxMessageBox(wxString::Format(L"Error releasing IP address %ld", retVal), L"Error Releasing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+					//If the IP has already been released, i.e. has 169 address
+					if(retVal == 1228){}
+					//Else if the adapter actually cannot be released
+					else if(retVal == 2){}
+					//Else, show the error
+					else
+					{
+						//Buffer to hold the message
+						wchar_t * sBuff;
+						
+						//Format the error
+						FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, retVal, 0,
+							(wchar_t *)&sBuff, 0, NULL);
+							
+						//String to display
+						wxString eMessage = wxString(L"Error releasing IP address ") + wxString(sBuff);
+						
+						//Show the error
+						//wxMessageBox(wxString::Format(L"Error releasing IP address %ld", retVal), L"Error Releasing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+						wxMessageBox(eMessage, L"Error Releasing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+					} //Ends the else
 				} //Ends the if
+				//Else, sleep so the IP can refresh
+				else
+				{
+					//Sleep for eight seconds
+					Sleep(8000);
+				} //Ends the else
 			} //Ends the if
 		} //Ends the for loop
 	} //Ends the if	
@@ -893,8 +918,19 @@ void ipconfigGUIFrame::renewIP(wxCommandEvent& event)
 				//If error
 				if(retVal != NO_ERROR)
 				{
+					//Buffer to hold the message
+					wchar_t * sBuff;
+					
+					//Format the error
+					FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, retVal, 0,
+						(wchar_t *)&sBuff, 0, NULL);
+						
+					//String to display
+					wxString eMessage = wxString(L"Error renewing IP address ") + wxString(sBuff);
+					
 					//Show the error
-					wxMessageBox(wxString::Format(L"Error renewing IP address %ld", retVal), L"Error Renewing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+					//wxMessageBox(wxString::Format(L"Error renewing IP address %ld", retVal), L"Error Renewing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+					wxMessageBox(eMessage, L"Error Renewing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
 				} //Ends the if
 			} //Ends the if
 		} //Ends the for loop
@@ -952,8 +988,27 @@ void ipconfigGUIFrame::releaseAllIP(wxCommandEvent& event)
 			//If error
 			if(retVal != NO_ERROR)
 			{
-				//Show the error
-				wxMessageBox(wxString::Format(L"Error releasing IP address %ld", retVal), L"Error Releasing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+				//If the IP has already been released, i.e. has 169 address
+				if(retVal == 1228){}
+				//Else if the adapter actually cannot be released
+				else if(retVal == 2){}
+				//Else, show the error
+				else
+				{
+					//Buffer to hold the message
+					wchar_t * sBuff;
+					
+					//Format the error
+					FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, retVal, 0,
+						(wchar_t *)&sBuff, 0, NULL);
+						
+					//String to display
+					wxString eMessage = wxString(L"Error releasing IP address ") + wxString(sBuff);
+					
+					//Show the error
+					//wxMessageBox(wxString::Format(L"Error releasing IP address %ld", retVal), L"Error Releasing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+					wxMessageBox(eMessage, L"Error Releasing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+				} //Ends the else
 			} //Ends the if
 		} //Ends the for loop
 	} //Ends the if
@@ -995,6 +1050,9 @@ void ipconfigGUIFrame::releaseAllIP(wxCommandEvent& event)
 	
 	//Disable the menu item
 	editMenu->Enable(idReleaseAll, true);
+	
+	//Sleep for eight seconds
+	Sleep(8000);
 	
 	//Calls the function to refresh the data
 	refreshData();
@@ -1048,8 +1106,25 @@ void ipconfigGUIFrame::renewAllIP(wxCommandEvent& event)
 			//If error
 			if(retVal != NO_ERROR)
 			{
-				//Show the error
-				wxMessageBox(wxString::Format(L"Error renewing IP address %ld", retVal), L"Error Renewing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+				//If the adapter cannot actually be renewed, don't show error on the all function
+				if(retVal == 2) {}
+				//Else, show error
+				else
+				{
+					//Buffer to hold the message
+					wchar_t * sBuff;
+					
+					//Format the error
+					FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, retVal, 0,
+						(wchar_t *)&sBuff, 0, NULL);
+						
+					//String to display
+					wxString eMessage = wxString(L"Error renewing IP address ") + wxString(sBuff);
+					
+					//Show the error
+					//wxMessageBox(wxString::Format(L"Error renewing IP address %ld", retVal), L"Error Renewing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+					wxMessageBox(eMessage, L"Error Renewing IP Address", wxICON_ERROR | wxSTAY_ON_TOP, this);
+				} //Ends the else
 			} //Ends the if
 		} //Ends the for loop
 	} //Ends the if	
