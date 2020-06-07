@@ -1254,9 +1254,9 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	fPanel->Connect(wxEVT_CHAR, wxKeyEventHandler(ipconfigFrame::panelKeyDown), NULL, this);
 	
 	//Create the buttons
-	okButton = new wxButton(fPanel, wxID_OK, L"&OK");
-	refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
-	copyClipboardButton = new wxButton(fPanel, idCopyToClipboard, L"&Copy");
+	wxButton * okButton = new wxButton(fPanel, wxID_OK, L"&OK");
+	wxButton * refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
+	wxButton * copyClipboardButton = new wxButton(fPanel, idCopyToClipboard, L"&Copy");
 	
 	//Set the tool tips for all of the controls
 	okButton->SetToolTip(L"Close (Alt+O)");
@@ -1264,7 +1264,7 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	copyClipboardButton->SetToolTip(L"Copy the text to the clipboard (Alt+C)");
 	
 	//Create the text control
-	ipconfigOutput = new wxTextCtrl(fPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE, wxDefaultValidator, wxTextCtrlNameStr);
+	wxTextCtrl * ipconfigOutput = new wxTextCtrl(fPanel, idTextCtrl, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE, wxDefaultValidator, wxTextCtrlNameStr);
 	
 	//Get the font for the control
 	wxFont iOFont = ipconfigOutput->GetFont();
@@ -1488,6 +1488,9 @@ void ipconfigFrame::refreshData()
 	//Create a wxString from the output
 	wxString controlText(ipO);
 	
+	//Get the text control
+	wxTextCtrl * ipconfigOutput = (wxTextCtrl *)FindWindow(idTextCtrl);
+	
 	//Set the control value
 	ipconfigOutput->SetValue(controlText);
 } //Ends the function
@@ -1519,6 +1522,9 @@ void ipconfigFrame::copyClipboard(wxCommandEvent & event)
 	{
 		//Clear the clipboard
 		wxTheClipboard->Clear();
+
+		//Get the text control
+		wxTextCtrl * ipconfigOutput = (wxTextCtrl *)FindWindow(idTextCtrl);
 		
 		//Set the text
 		wxTheClipboard->SetData(new wxTextDataObject(ipconfigOutput->GetValue()));
