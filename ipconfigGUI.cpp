@@ -1045,14 +1045,14 @@ void ipconfigGUIFrame::releaseAllIP(wxCommandEvent& event)
 	//Free the pointer
 	delete[] procCMDLine;
 	
+	//Sleep for eight seconds
+	Sleep(8000);
+	
 	//Enable the release all button
 	releaseAllButton->Enable(true);
 	
 	//Disable the menu item
 	editMenu->Enable(idReleaseAll, true);
-	
-	//Sleep for eight seconds
-	Sleep(8000);
 	
 	//Calls the function to refresh the data
 	refreshData();
