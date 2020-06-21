@@ -439,6 +439,24 @@ void ipconfigGUIFrame::getAdapterInfo()
 ///Function that refreshes the data in the window
 void ipconfigGUIFrame::refreshData()
 {
+	//Finds the button
+	wxButton * refreshButton = (wxButton *)FindWindow(idRefresh);
+	
+	//Disable the refresh button
+	refreshButton->Enable(false);
+	
+	//Get the menu bar from the frame
+	wxMenuBar * fMenu = GetMenuBar();
+	
+	//Look for the edit menu
+	int eMenuIndex = fMenu->FindMenu(L"Edit");
+	
+	//Gets the edit menu
+	wxMenu * editMenu = fMenu->GetMenu(eMenuIndex);
+	
+	//Disable the menu item
+	editMenu->Enable(idRefresh, false);
+	
 	//Get all new data
 	getAdapterInfo();
 	
@@ -550,6 +568,12 @@ void ipconfigGUIFrame::refreshData()
 	
 	//Calls the function to refresh the child window
 	refreshChildWindow();
+	
+	//Enable the menu item
+	editMenu->Enable(idRefresh, true);
+	
+	//Enable the button
+	refreshButton->Enable(true);
 } //Ends the function
 
 ///Function that searches for child windows and calls the refresh method
@@ -574,6 +598,18 @@ void ipconfigGUIFrame::panelKeyDown(wxKeyEvent& event)
 ///Function that attempts to flush the dns cache
 void ipconfigGUIFrame::flushDNS(wxCommandEvent & event)
 {
+	//Get the menu bar from the frame
+	wxMenuBar * fMenu = GetMenuBar();
+	
+	//Look for the edit menu
+	int eMenuIndex = fMenu->FindMenu(L"Edit");
+	
+	//Gets the edit menu
+	wxMenu * editMenu = fMenu->GetMenu(eMenuIndex);
+	
+	//Disable the menu item
+	editMenu->Enable(idFlushDNS, false);
+	
 	//Path to the DLL
 	wchar_t * dnsAPIDLLPath = new wchar_t[512];
 	ExpandEnvironmentStrings(L"%SystemRoot%\\system32\\dnsapi.dll", dnsAPIDLLPath, 512);
@@ -631,11 +667,26 @@ void ipconfigGUIFrame::flushDNS(wxCommandEvent & event)
 			} //Else, error
 		} //Ends the else
 	} //Ends the else
+		
+	//Enable the menu item
+	editMenu->Enable(idFlushDNS, true);
 } //Ends the function
 
 ///Function that attempts to register the address in DNS
 void ipconfigGUIFrame::registerDNS(wxCommandEvent & event)
 {
+	//Get the menu bar from the frame
+	wxMenuBar * fMenu = GetMenuBar();
+	
+	//Look for the edit menu
+	int eMenuIndex = fMenu->FindMenu(L"Edit");
+	
+	//Gets the edit menu
+	wxMenu * editMenu = fMenu->GetMenu(eMenuIndex);
+	
+	//Disable the menu item
+	editMenu->Enable(idRegisterDNS, false);
+	
 	//Path to the DLL
 	wchar_t * dnsAPIDLLPath = new wchar_t[512];
 	ExpandEnvironmentStrings(L"%SystemRoot%\\system32\\dnsapi.dll", dnsAPIDLLPath, 512);
@@ -713,6 +764,9 @@ void ipconfigGUIFrame::registerDNS(wxCommandEvent & event)
 	//Show message
 	wxMessageBox(L"Registration of the DNS resource records for all adapters of this computer has been initiated. Any errors will be reported in the Event Viewer in 15 minutes.",
 		L"Attempting to Register DNS Resource Records", wxICON_INFORMATION | wxSTAY_ON_TOP, this);
+		
+	//Enable the menu item
+	editMenu->Enable(idRegisterDNS, true);
 } //Ends the function
 
 ///Method that handles the quit event
@@ -1482,6 +1536,12 @@ wstring ipconfigFrame::getIPConfigOutput()
 ///Function called to refresh the data in the frame
 void ipconfigFrame::refreshData()
 {
+	//Finds the button
+	wxButton * refreshButton = (wxButton *)FindWindow(idRefresh);
+	
+	//Disable the button
+	refreshButton->Enable(false);
+	
 	//Get the ipconfig output
 	wstring ipO = getIPConfigOutput();
 	
@@ -1493,6 +1553,9 @@ void ipconfigFrame::refreshData()
 	
 	//Set the control value
 	ipconfigOutput->SetValue(controlText);
+	
+	//Enable the button
+	refreshButton->Enable(true);
 } //Ends the function
 
 ///Handles key events for the main panel
@@ -1517,6 +1580,12 @@ void ipconfigFrame::refresh(wxCommandEvent& event)
 //Functio that copies the text to the clipboard
 void ipconfigFrame::copyClipboard(wxCommandEvent & event)
 {
+	//Finds the copy button
+	wxButton * copyClipboardButton = (wxButton *)FindWindow(idCopyToClipboard);
+	
+	//Disable the button
+	copyClipboardButton->Enable(false);
+	
 	//Try to open the clipboard
 	if(wxTheClipboard->Open())
 	{
@@ -1535,6 +1604,9 @@ void ipconfigFrame::copyClipboard(wxCommandEvent & event)
 		//Close the clipboard
 		wxTheClipboard->Close();
 	} //Ends the if
+	
+	//Enable the button
+	copyClipboardButton->Enable(true);
 } //Ends the function
 
 ///Method that handles the quit event
