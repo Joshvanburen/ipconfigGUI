@@ -8,9 +8,6 @@
 ///Include the header
 #include "ipconfigGUI.h"
 
-///Include the icons
-#include "ipconfigGUI.xpm"
-
 //Macro to timplement the application
 IMPLEMENT_APP(ipconfigGUIApp)
 
@@ -42,6 +39,7 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	
 	//Set the key event handler for the panel
 	fPanel->Connect(wxEVT_CHAR, wxKeyEventHandler(ipconfigGUIFrame::panelKeyDown), NULL, this);
+	fPanel->Bind(wxEVT_CHAR_HOOK, ipconfigGUIFrame::panelKeyDown, this);
 	
 	//Creates the menu bar
 	wxMenuBar * menubar = new wxMenuBar;
@@ -169,7 +167,7 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	vboxMain->Fit(fPanel);
 	
 	//Set the icon
-	SetIcon(wxIcon(ipconfigGUI_xpm));
+	SetIcon(wxIcon(L"id"));
 	
 	//Create the status bar
     CreateStatusBar(1);
@@ -1272,7 +1270,7 @@ void ipconfigGUIFrame::about(wxCommandEvent& event)
 	//aboutInfo.SetCopyright("(C) 2011");
 	aboutInfo.SetWebSite("https://github.com/Joshvanburen");
 	aboutInfo.AddDeveloper("Josh Van Buren");
-	aboutInfo.SetIcon(wxIcon(ipconfigGUI_xpm));
+	aboutInfo.SetIcon(wxIcon(L"id"));
 
 	//Displays the box
 	wxAboutBox(aboutInfo);
@@ -1351,7 +1349,7 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	vboxMain->Fit(fPanel);
 	
 	//Set the icon
-	SetIcon(wxIcon(ipconfigGUI_xpm));
+	SetIcon(wxIcon(L"id"));
 	
 	//Create the status bar
     //CreateStatusBar(1);
