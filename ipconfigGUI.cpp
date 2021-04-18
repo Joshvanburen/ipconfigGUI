@@ -94,10 +94,10 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	//Create the buttons
 	wxButton * okButton = new wxButton(fPanel, wxID_OK, L"&OK");
 	wxButton * releaseButton = new wxButton(fPanel, idRelease, L"Relea&se");
-	wxButton * releaseAllButton = new wxButton(fPanel, idReleaseAll, L"Rele&ase All");
 	wxButton * renewButton = new wxButton(fPanel, idRenew, L"Re&new");
-	wxButton * renewAllButton = new wxButton(fPanel, idRenewAll, L"Rene&w All");
 	wxButton * refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
+	wxButton * releaseAllButton = new wxButton(fPanel, idReleaseAll, L"Rele&ase All");
+	wxButton * renewAllButton = new wxButton(fPanel, idRenewAll, L"Rene&w All");
 	
 	//Create labels for the information
 	wxStaticText * compNameLabel = new wxStaticText(fPanel, wxID_ANY, L"Computer Name:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
