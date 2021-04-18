@@ -64,12 +64,12 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	editMenu->Append(idReleaseAll, L"Rele&ase All\tCtrl+A", L"Releases the IP address of all adapters");
 	editMenu->Append(idRenewAll, L"Rene&w All\tCtrl+W", L"Renews the IP address of the all adapters");
 	editMenu->AppendSeparator();
-	editMenu->Append(idRefresh, L"&Refresh\tCtrl+R", L"Refreshes the adapter data");
-	editMenu->AppendSeparator();
 	editMenu->Append(idFlushDNS, L"&Flush DNS\tCtrl+F", L"Flushes the DNS resolver cache");
 	editMenu->Append(idRegisterDNS, L"Register &DNS\tCtrl+D", L"Attempts to register the address in DNS");
 	editMenu->AppendSeparator();
-	editMenu->Append(idShowConfig, L"Show &Ipconfig Output", L"Shows full ipconfig output");
+	editMenu->Append(idShowConfig, L"Show &Ipconfig Output\tCtrl+I", L"Shows full ipconfig output");
+	editMenu->AppendSeparator();
+	editMenu->Append(idRefresh, L"&Refresh\tCtrl+R", L"Refreshes the adapter data");
 	
 	//Add items to the help menu
 	helpMenu->Append(wxID_ABOUT, L"&About...\tF1", L"Show about dialog");
@@ -1304,16 +1304,7 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	
 	//Set the key event handler for the panel
 	fPanel->Connect(wxEVT_CHAR, wxKeyEventHandler(ipconfigFrame::panelKeyDown), NULL, this);
-	
-	//Create the buttons
-	wxButton * okButton = new wxButton(fPanel, wxID_OK, L"&OK");
-	wxButton * refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
-	wxButton * copyClipboardButton = new wxButton(fPanel, idCopyToClipboard, L"&Copy");
-	
-	//Set the tool tips for all of the controls
-	okButton->SetToolTip(L"Close (Alt+O)");
-	refreshButton->SetToolTip(L"Refreshes the adapter data (Alt+R)");
-	copyClipboardButton->SetToolTip(L"Copy the text to the clipboard (Alt+C)");
+	fPanel->Bind(wxEVT_CHAR_HOOK, ipconfigFrame::panelKeyDown, this);
 	
 	//Create the text control
 	wxTextCtrl * ipconfigOutput = new wxTextCtrl(fPanel, idTextCtrl, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE, wxDefaultValidator, wxTextCtrlNameStr);
@@ -1326,6 +1317,16 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	
 	//Set the font
 	ipconfigOutput->SetFont(iOFont);
+	
+	//Create the buttons
+	wxButton * okButton = new wxButton(fPanel, wxID_OK, L"&OK");
+	wxButton * refreshButton = new wxButton(fPanel, idRefresh, L"&Refresh");
+	wxButton * copyClipboardButton = new wxButton(fPanel, idCopyToClipboard, L"&Copy");
+	
+	//Set the tool tips for all of the controls
+	okButton->SetToolTip(L"Close (Alt+O)");
+	refreshButton->SetToolTip(L"Refreshes the adapter data (Alt+R)");
+	copyClipboardButton->SetToolTip(L"Copy the text to the clipboard (Alt+C)");
 	
 	//Create the box sizers
 	wxBoxSizer * vboxMain = new wxBoxSizer(wxVERTICAL);
