@@ -29,7 +29,7 @@ bool ipconfigGUIApp::OnInit()
 
 ///Frame constructor
 ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
-       : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(450, 360))
+       : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxDefaultSize)
 {
 	//Get the adapter information
 	getAdapterInfo();
@@ -160,11 +160,17 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	vboxMain->Add(hbox2, 0, wxALL | wxALIGN_CENTER, 5);
 	vboxMain->Add(hbox3, 0, wxALL | wxALIGN_CENTER, 5);
 	
+	//Refresh the data
+	refreshData();
+	
 	//Set the sizer for the panel
 	fPanel->SetSizer(vboxMain);
 	
 	//Fit the sizer to the panel
 	vboxMain->Fit(fPanel);
+	
+	//Set the size hints
+	vboxMain->SetSizeHints(this);
 	
 	//Set the icon
 	SetIcon(wxIcon(L"id"));
@@ -172,9 +178,6 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	//Create the status bar
     CreateStatusBar(1);
     SetStatusText(L"Ipconfig GUI");
-	
-	//Refresh the data
-	refreshData();
 } //Ends the constructor
 
 ///Function that gets the computer name
@@ -1297,7 +1300,7 @@ void ipconfigGUIFrame::childClosed()
 
 ///Frame constructor
 ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
-       : wxFrame(parent, wxID_ANY, title, wxDefaultPosition, wxSize(675, 500))
+       : wxFrame(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize)
 {
 	//Panel for the frame
 	wxPanel * fPanel = new wxPanel(this, wxID_ANY);
@@ -1343,11 +1346,17 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	vboxMain->Add(hbox1, 1, wxALL | wxEXPAND, 5);
 	vboxMain->Add(hbox2, 0, wxALL | wxALIGN_CENTER, 5);
 	
+	//Refresh the data
+	refreshData();
+	
 	//Set the sizer for the panel
 	fPanel->SetSizer(vboxMain);
 	
 	//Fit the sizer to the panel
 	vboxMain->Fit(fPanel);
+	
+	//Set the size hints
+	vboxMain->SetSizeHints(this);
 	
 	//Set the icon
 	SetIcon(wxIcon(L"id"));
@@ -1355,9 +1364,6 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	//Create the status bar
     //CreateStatusBar(1);
     //SetStatusText(L"Full Ipconfig Information");
-	
-	//Refresh the data
-	refreshData();
 } //Ends the function
 
 ///Function that handles the refresh call from the parent
@@ -1555,6 +1561,22 @@ void ipconfigFrame::refreshData()
 	
 	//Enable the button
 	refreshButton->Enable(true);
+	
+	//Client drawing control
+	wxClientDC dc(ipconfigOutput);
+	
+	//Set the font
+	dc.SetFont(ipconfigOutput->GetFont());
+	
+	//Get the size of the text
+	wxSize textSize = dc.GetMultiLineTextExtent(ipconfigOutput->GetValue());
+	
+	//Change the size
+	textSize.y = textSize.y / 2;
+	textSize.x = textSize.x + wxSystemSettings::GetMetric(wxSYS_VSCROLL_X) + 10;
+	
+	//Set the minimum size of the text control
+	ipconfigOutput->SetMinSize(textSize);
 } //Ends the function
 
 ///Handles key events for the main panel
