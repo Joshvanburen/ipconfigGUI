@@ -156,12 +156,19 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	hbox3->Add(renewAllButton, 1, wxALL | wxEXPAND, 5);
 	
 	//Add the horizontal sizers to the vertical one
-	vboxMain->Add(hbox1, 1, wxALL, 5);
+	vboxMain->Add(hbox1, 1, wxALL | wxEXPAND, 5);
 	vboxMain->Add(hbox2, 0, wxALL | wxALIGN_CENTER, 5);
 	vboxMain->Add(hbox3, 0, wxALL | wxALIGN_CENTER, 5);
 	
 	//Refresh the data
 	refreshData();
+	
+	//Set the icon
+	SetIcon(wxIcon(L"id"));
+	
+	//Create the status bar
+    CreateStatusBar(1);
+    SetStatusText(L"Ipconfig GUI");
 	
 	//Set the sizer for the panel
 	fPanel->SetSizer(vboxMain);
@@ -171,13 +178,6 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	
 	//Set the size hints
 	vboxMain->SetSizeHints(this);
-	
-	//Set the icon
-	SetIcon(wxIcon(L"id"));
-	
-	//Create the status bar
-    CreateStatusBar(1);
-    SetStatusText(L"Ipconfig GUI");
 } //Ends the constructor
 
 ///Function that gets the computer name
