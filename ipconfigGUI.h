@@ -8,6 +8,7 @@ Header file for ipconiggui
 
 //Use unicode
 #define UNICODE
+#define _UNICODE
 
 //Includes
 #include <winsock2.h>
@@ -132,10 +133,6 @@ class ipconfigFrame : public wxFrame
 		void copyClipboard(wxCommandEvent & event);
 		void OnExit(wxCommandEvent & event);
 		void onClose(wxCloseEvent& evt);
-		wxButton * okButton;
-		wxButton * refreshButton;
-		wxButton * copyClipboardButton;
-		wxTextCtrl * ipconfigOutput;
 		
 	//Declare the event table
 	DECLARE_EVENT_TABLE();
@@ -145,6 +142,7 @@ class ipconfigFrame : public wxFrame
 	{
 		//Event values
 		idRefresh = 2000,
+		idTextCtrl,
 		idCopyToClipboard
 	};
 };

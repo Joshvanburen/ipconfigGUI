@@ -136,16 +136,16 @@ ipconfigGUIFrame::ipconfigGUIFrame(const wxString& title)
 	wxBoxSizer * hbox3 = new wxBoxSizer(wxHORIZONTAL);
 	
 	//Add items to the sizers
-	vboxLeft->Add(compNameLabel, 1, wxALL | wxEXPAND | wxALIGN_LEFT, 5);
-	vboxLeft->Add(adapterNameLabel, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT, 5);
-	vboxLeft->Add(ipV4Label, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT, 5);
-	vboxLeft->Add(ipV6Label, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT, 5);
-	vboxLeft->Add(macLabel, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT, 5);
-	vboxRight->Add(compNameInfoText, 1, wxEXPAND | wxALL | wxALIGN_LEFT, 5);
-	vboxRight->Add(adapterDescCombo, 1, wxEXPAND | wxALL | wxALIGN_LEFT, 5);
-	vboxRight->Add(ipV4InfoText, 1, wxEXPAND | wxALL | wxALIGN_LEFT, 5);
-	vboxRight->Add(ipV6InfoText, 1, wxEXPAND | wxALL | wxALIGN_LEFT, 5);
-	vboxRight->Add(macInfoText, 1, wxEXPAND | wxALL | wxALIGN_LEFT, 5);
+	vboxLeft->Add(compNameLabel, 1, wxALL | wxEXPAND, 5);
+	vboxLeft->Add(adapterNameLabel, 1, wxALL | wxEXPAND, 5);
+	vboxLeft->Add(ipV4Label, 1, wxALL | wxEXPAND, 5);
+	vboxLeft->Add(ipV6Label, 1, wxALL | wxEXPAND, 5);
+	vboxLeft->Add(macLabel, 1, wxALL | wxEXPAND, 5);
+	vboxRight->Add(compNameInfoText, 1, wxEXPAND | wxALL, 5);
+	vboxRight->Add(adapterDescCombo, 1, wxEXPAND | wxALL, 5);
+	vboxRight->Add(ipV4InfoText, 1, wxEXPAND | wxALL, 5);
+	vboxRight->Add(ipV6InfoText, 1, wxEXPAND | wxALL, 5);
+	vboxRight->Add(macInfoText, 1, wxEXPAND | wxALL, 5);
 	hbox1->Add(vboxLeft, 1, wxALL | wxEXPAND, 5);
 	hbox1->Add(vboxRight, 1, wxALL | wxEXPAND, 5);
 	hbox2->Add(okButton, 1, wxALL | wxEXPAND, 5);
@@ -335,8 +335,24 @@ void ipconfigGUIFrame::getAdapterInfo()
 						//Get the v6 address
 						InetNtopW(AF_INET6,&(sa_in6->sin6_addr),buff,bufflen);
 						
-						//Store the address
-						loopAdapt.ipV6Addr = wstring(buff);
+						//String variable to hold the address
+						wstring ipV6String = wstring(buff);
+						
+						//Look to see if the address starts with fe80
+						std:wstring::size_type searchPos = ipV6String.find(wstring(L"fe80"));
+						
+						//If it's not a local address, store it
+						if(searchPos == std::wstring::npos)
+						{
+							//Store the address
+							loopAdapt.ipV6Addr = ipV6String;
+						} //Ends the if
+						//Else, look to see if an address is already stored
+						else
+						{
+							//Look for the address by checking the length
+							if(loopAdapt.ipV6Addr.length() < 1) { loopAdapt.ipV6Addr = ipV6String; }
+						} //Ends the else
 					} //Ends the if
 					//Else, do nothing
 					else {}
@@ -1337,7 +1353,7 @@ ipconfigFrame::ipconfigFrame(wxWindow * parent, const wxString& title)
 	wxBoxSizer * hbox2 = new wxBoxSizer(wxHORIZONTAL);
 	
 	//Add items to the sizers
-	hbox1->Add(ipconfigOutput, 1, wxEXPAND | wxALL | wxALIGN_LEFT, 5);
+	hbox1->Add(ipconfigOutput, 1, wxEXPAND | wxALL, 5);
 	hbox2->Add(okButton, 1, wxALL | wxEXPAND, 5);
 	hbox2->Add(refreshButton, 1, wxALL | wxEXPAND, 5);
 	hbox2->Add(copyClipboardButton, 1, wxALL | wxEXPAND, 5);
